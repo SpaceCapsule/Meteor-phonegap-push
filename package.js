@@ -3,8 +3,8 @@ Package.describe({
 });
 
 Npm.depends({
-        // 'apn' : '1.2.6',
-        // 'node-gcm' : '0.9.4'
+        'apn' : '1.2.6',
+        'node-gcm' : '0.9.4'
 });
 
 

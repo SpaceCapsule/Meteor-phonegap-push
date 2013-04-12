@@ -6784,4 +6784,4 @@ window.cordova = require('cordova');
 
 
 })();
-window.PhoneGap = cordova;
+var PhoneGap = cordova;
