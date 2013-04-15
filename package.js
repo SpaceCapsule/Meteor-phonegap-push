@@ -12,8 +12,8 @@ Package.on_use(function (api) {
   //api.use('', 'client');
 
   	api.add_files([
-					'phonegap.client.js',
-					'generic.push.client.js'
+					'phonegap.client.js'
+					//'generic.push.client.js'
 					], 'client');
 
   	api.add_files([
