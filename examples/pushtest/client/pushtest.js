@@ -24,6 +24,22 @@ if (Meteor.isClient) {
 
   Session.set('deviceready', false);
 
+  PhoneGap.addEventListener('pushLaunch', function(e) {
+    console.log('------ pushLaunch -------');
+  });
+
+  PhoneGap.addEventListener('pushError', function(e) {
+    console.log('------ pushError -------');
+  });
+
+  PhoneGap.addEventListener('pushToken', function(e) {
+    console.log('------ pushToken -------');
+  });
+
+  PhoneGap.addEventListener('pushSuccess', function(e) {
+    console.log('------ pushSuccess -------');
+  });
+  
   Meteor.startup(function() {
 
     PhoneGap.addEventListener('deviceready', function() {
@@ -46,22 +62,6 @@ if (Meteor.isClient) {
         console.log('Im on the ' + value.platform);
       });
 
-/*
-      PhoneGap.addEventListener('pushLaunch', function(e) {
-        console.log('------ pushLaunch -------');
-      });
-
-      PhoneGap.addEventListener('pushError', function(e) {
-        console.log('------ pushError -------');
-      });
-
-      PhoneGap.addEventListener('pushToken', function(e) {
-        console.log('------ pushToken -------');
-      });
-
-      PhoneGap.addEventListener('pushSuccess', function(e) {
-        console.log('------ pushSuccess -------');
-      });*/
 
       //PhoneGap.call('meteorPhonegapPush', { senderID: '' });
 

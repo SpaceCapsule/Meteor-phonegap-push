@@ -4,13 +4,20 @@
 
     Include this file in the compiled version of the app
  */
-version = '0.0.1';
+version = '0.0.2';
 
-dispatchEvent = function(eventName, data) {
-  /*var evt = (typeof(CustomEvent) === 'undefined')? document.createEvent("Event") : new CustomEvent(eventName);
-  if (typeof(CustomEvent) === 'undefined') evt.initEvent(eventName, true, true);
-  evt.data = data;
-  document.dispatchEvent(evt);*/
+sendEvent = function(eventName, data) {
+  console.log(eventName);
+  var evt;
+  if (typeof(CustomEvent) == 'undefined') {
+
+    evt = document.createEvent("Event"); 
+    evt.initEvent(eventName, true, true);
+    evt.detail = data;
+  } else {
+    evt = new CustomEvent(eventName, { 'detail': data });
+  }
+  document.dispatchEvent(evt);
 };
 
 // Get hold of function

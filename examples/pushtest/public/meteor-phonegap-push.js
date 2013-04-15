@@ -35,7 +35,7 @@ function meteorPhonegapPush(options) {
 		{ 
 			console.log('There was an error starting up push'); 
 			console.log('Error description: ' + err.message); 
-			dispatchEvent('pushError', err);
+			sendEvent('pushError', err);
 		} 
 
 	}, true);
@@ -56,7 +56,7 @@ function onNotificationAPN(e) {
         pushNotification.setApplicationIconBadgeNumber(successHandler, e.badge);
     }
 
-	dispatchEvent('pushLaunch', e); // e.foreground, e.foreground, Coldstart or background
+	sendEvent('pushLaunch', e); // e.foreground, e.foreground, Coldstart or background
 }
 
 // handle GCM notifications for Android
@@ -65,7 +65,7 @@ function onNotificationGCM(e) {
     {
         case 'registered':
 		if ( e.regid.length > 0 )
-			dispatchEvent('pushToken', e.regID);
+			sendEvent('pushToken', e.regID);
         break;
         
         case 'message':
@@ -79,25 +79,25 @@ function onNotificationGCM(e) {
 				my_media.play();
 			}
 				
-			dispatchEvent('pushLaunch', e); // e.foreground, e.foreground, Coldstart or background
+			sendEvent('pushLaunch', e); // e.foreground, e.foreground, Coldstart or background
 			// e.payload.message, e.payload.msgcnt, e.msg, e.soundname
         break;
         
         case 'error':
-			dispatchEvent('pushError', e); // e.msg
+			sendEvent('pushError', e); // e.msg
         break;
 
     }
 }
 
 function tokenHandler (result) {
-	dispatchEvent('pushToken', result);
+	sendEvent('pushToken', result);
 }
 
 function successHandler (result) {
-	dispatchEvent('pushSuccess', result);
+	sendEvent('pushSuccess', result);
 }
 
 function errorHandler (error) {
-	dispatchEvent('pushError', error);
+	sendEvent('pushError', error);
 }
