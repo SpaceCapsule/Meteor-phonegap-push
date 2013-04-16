@@ -24,27 +24,32 @@ if (Meteor.isClient) {
 
   Session.set('deviceready', false);
 
-  PhoneGap.addEventListener('pushLaunch', function(e) {
-    console.log('------ pushLaunch -------');
-  });
-
-  PhoneGap.addEventListener('pushError', function(e) {
-    console.log('------ pushError -------');
-  });
-
-  PhoneGap.addEventListener('pushToken', function(e) {
-    console.log('------ pushToken -------');
-  });
-
-  PhoneGap.addEventListener('pushSuccess', function(e) {
-    console.log('------ pushSuccess -------');
-  });
-  
   Meteor.startup(function() {
 
     PhoneGap.addEventListener('deviceready', function() {
       Session.set('deviceready', true);
       console.log('------ DEVICE IS READY -------');
+
+      PhoneGap.addEventListener('pushLaunch', function(e) {
+        console.log('------ pushLaunch -------');
+      });
+
+      PhoneGap.addEventListener('pushError', function(e) {
+        console.log('------ pushError -------');
+      });
+
+      PhoneGap.addEventListener('pushSuccess', function(e) {
+        console.log('------ pushSuccess -------');
+      });
+
+      PhoneGap.addEventListener('pushToken', function(e) {
+        console.log('------ pushToken -------');
+        if (e.androidToken)
+          console.log('Adroid Token: '+e.androidToken);
+        if (e.iosToken)
+          console.log('IOS Token: '+e.androidToken);
+      });
+
 
       PhoneGap.addEventListener('backbutton', function(e) {
         console.log('------ backbutton -------');
@@ -65,6 +70,7 @@ if (Meteor.isClient) {
 
       //PhoneGap.call('meteorPhonegapPush', { senderID: '' });
 
+      PhoneGap.setReady();
 
     }); // EO Device ready
 
@@ -75,6 +81,8 @@ if (Meteor.isClient) {
     PhoneGap.addEventListener('resume', function(event) {
       console.log('------ DEVICE IS RESUMED -------');
     });
+
+
   }); // EO Start up
 
 

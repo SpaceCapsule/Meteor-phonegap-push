@@ -42,7 +42,10 @@ DEBUG = false;
 
     // Return to callback
     window.addEventListener('message', function (event) {
-      if (event && event.data && !event.data.event && event.data.callbackId != undefined && self.methodCalls[event.data.callbackId]) {
+      // if (event.detail) // Then use detail as data
+      //   event.data = event.detail;
+
+      if (event && event.data && !event.data.payload && event.data.callbackId != undefined && self.methodCalls[event.data.callbackId]) {
         /*
           data.func = method name     
           data.result = the result of running the function   
@@ -62,7 +65,7 @@ DEBUG = false;
           // Clean up
           delete self.methodCalls[event.data.callbackId];
         } // EO methodCall found
-      } else if (event && event.data) {
+      } else if (event && (event.data || event.detail)) {
             // device ready
             if (event.data.eventName && event.data.callbackId != -1) {
               // We got an event, deviceready is special
@@ -74,8 +77,8 @@ DEBUG = false;
                 // Generic event handler...
                 if (self.eventCallbacks[event.data.eventName])
                   for (var i = 0; i < self.eventCallbacks[event.data.eventName].length; i++)
-                    if (event.data.event)
-                      self.eventCallbacks[event.data.eventName][i](event.data.event)          
+                    if (event.data.payload)
+                      self.eventCallbacks[event.data.eventName][i](event.data.payload)          
                     else
                       self.eventCallbacks[event.data.eventName][i]();          
               }
@@ -83,8 +86,9 @@ DEBUG = false;
               // Empty function - no where to return
             }
 
-        } else
+        } else {
           throw new Error('Cant run callback, unknown callback');
+        }
     });
 
 
@@ -128,10 +132,14 @@ DEBUG = false;
 
     self.getValue = function(/* arguments */) {
       var newArgs = [];
-      newArgs[0] = 'getValue';
+      newArgs[0] = 'meteorPhonegap.getValue';
       for (var i = 0; i < arguments.length; i++)
         newArgs[i+1] = arguments[i];
       self.call.apply(self, newArgs);
+    };
+
+    self.setReady = function() {
+      window.parent.postMessage({ clientready: true }, parentOrigin);
     };
 
 
