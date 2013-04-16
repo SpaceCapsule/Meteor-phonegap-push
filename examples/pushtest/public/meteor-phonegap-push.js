@@ -59,11 +59,12 @@ MeteorPhonegap.prototype.initPush = function(options) {
 	        pushNotification.setApplicationIconBadgeNumber(successHandler, e.badge);
 	    }
 
-		self.sendEvent('pushLaunch', { alert: e.alert });
+		self.sendEvent('pushLaunch', e);//e.alert });
 	}
 
 	// handle GCM notifications for Android
 	self.onNotificationGCM = function(e) {
+		console.log('onNotificationGCM is called');
 	    switch( e.event )
 	    {
 	        case 'registered':
@@ -80,20 +81,16 @@ MeteorPhonegap.prototype.initPush = function(options) {
 	        	if (e.foreground)
 	        	{
 					// if the notification contains a soundname, play it.
-					var my_media = new Media("/android_asset/www/"+e.soundname);
-					my_media.play();
+					// var my_media = new Media("/android_asset/www/"+e.soundname);
+					// my_media.play();
 				}
-					
-				self.sendEvent('pushLaunch', {
-								foreground: e.foreground,
-								coldstart: e.coldstart,
-								payload: e.payload
-				} ); // e.foreground, e.foreground, Coldstart or background
+
+				self.sendEvent('pushLaunch', e ); // e.foreground, e.foreground, Coldstart or background
 				// e.payload.message, e.payload.msgcnt, e.msg, e.soundname
 	        break;
 	        
 	        case 'error':
-				self.sendEvent('pushError', { error: e.msg } ); // e.msg
+				self.sendEvent('pushError', e ); // e.msg
 	        break;
 
 	    }

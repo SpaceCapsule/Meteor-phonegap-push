@@ -8,11 +8,15 @@
 </body>
 
 <template name="hello">
+  {{#if $.Session.get 'message'}}
+  	<div style="width: 90%; background-color: lightgray;">
+	  	{{$.Session.get 'message'}}
+  	</div>
+  {{/if}}
   <h1>Hello World?</h1>
-  {{greeting}}
-  My call?: {{$.Session.get 'test'}}<br/>
+  {{greeting}}<br/>
   Connection: {{$.Meteor.status.status}}<br/>
   deviceready: {{$.Session.get 'deviceready'}}<br/>
-  <input type="button" value="Click" />
+  <input type="button" value="Push test" />
   <pre style="width: 100%;">{{$.Session.get 'log'}}</pre>
 </template>

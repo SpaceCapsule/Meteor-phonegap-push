@@ -4,7 +4,7 @@
 
     Include this file in the compiled version of the app
  */
-version = '0.0.4';
+version = '0.0.5';
 
 document.addEventListener('clientready', function(e) {
   //console.log('Client Ready!');
@@ -30,12 +30,13 @@ MeteorPhonegap = function() {
   };
 
   self.sendEvent = function(eventName, data) {
+    var jsonSafeData = JSON.parse(JSON.stringify(data));
     // if clientready then trigger event direct
     if (self.clientready)
-      self._dispatchEvent(eventName, data)
+      self._dispatchEvent(eventName, jsonSafeData)
     else // Add a client ready listener
       document.addEventListener('clientready', function() {
-        self._dispatchEvent(eventName, data);
+        self._dispatchEvent(eventName, jsonSafeData);
       }, false);
   };
 

@@ -28,7 +28,7 @@ if (Meteor.isClient) {
   Session.set('log', '-');
   function myLog(text) {
     //console.log(text);
-    Session.set('log', Session.get('log') + '\n' + text);
+    Session.set('log', text + '\n' + Session.get('log'));
   }
 
   Meteor.startup(function() {
@@ -39,6 +39,14 @@ if (Meteor.isClient) {
 
       PhoneGap.addEventListener('pushLaunch', function(e) {
         myLog('------ pushLaunch -------');
+        _.each(e, function(value, key) {
+          myLog(key + ' = ' + value);
+        });
+        if (e.payload.message)
+          Session.set('message', e.payload.message);
+          Meteor.setTimeout(function() {
+            Session.set('message', '');
+          }, 4000);
       });
 
       PhoneGap.addEventListener('pushError', function(e) {
@@ -109,11 +117,9 @@ if (Meteor.isClient) {
   Template.hello.events({
     'click input' : function () {
       // template data, if any, is available in 'this'
-      if (typeof console !== 'undefined')
-        myLog("You pressed the button");
       Session.set('test', !Session.get('test'));
       Meteor.call('test', function(err, result) {
-        myLog('test call ok');
+        myLog('test push sent');
       });
     }
   });
