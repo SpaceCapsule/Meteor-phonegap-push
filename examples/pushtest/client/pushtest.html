@@ -4,16 +4,15 @@
 </head>
 
 <body>
-  <script type="text/javascript" src="cordova-2.6.0.js"></script>
-
   {{> hello}}
 </body>
 
 <template name="hello">
-  <h1>Hello World!?</h1>
+  <h1>Hello World?</h1>
   {{greeting}}
   My call?: {{$.Session.get 'test'}}<br/>
   Connection: {{$.Meteor.status.status}}<br/>
   deviceready: {{$.Session.get 'deviceready'}}<br/>
   <input type="button" value="Click" />
+  <pre style="width: 100%;">{{$.Session.get 'log'}}</pre>
 </template>

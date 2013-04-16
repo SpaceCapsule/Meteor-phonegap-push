@@ -4,7 +4,7 @@
 
     Include this file in the compiled version of the app
  */
-version = '0.0.3';
+version = '0.0.4';
 
 document.addEventListener('clientready', function(e) {
   //console.log('Client Ready!');
@@ -153,8 +153,8 @@ MeteorPhonegap = function() {
                 self.registredEvents[eventName] = true;
                 // Rig event
                 document.addEventListener(eventName, function(e) {
-                  // console.log('-->SEND ' + eventName);
-                  // console.log(JSON.stringify(e.data));
+                  console.log('-->SEND ' + eventName);
+                  console.log(JSON.stringify(e.data));
                   var resultMessage = {                  
                     eventName: eventName,
                     payload: e.data

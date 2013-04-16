@@ -142,6 +142,9 @@ DEBUG = false;
       window.parent.postMessage({ clientready: true }, parentOrigin);
     };
 
+    self.close = function() {
+      self.call('navigator.app.exitApp');
+    };
 
     return self;
 
