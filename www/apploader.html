@@ -1,0 +1,31 @@
+<html>
+<head>
+  <title>My app</title>
+<!-- LIVE !!! -->  
+  <script charset="utf-8" type="text/javascript" src="cordova-2.6.0.js"></script>
+  <script charset="utf-8" type="text/javascript" src="PushNotification.js"></script>
+  <script charset="utf-8" type="text/javascript" src="meteor-phonegap.js"></script>
+  <script charset="utf-8" type="text/javascript" src="meteor-phonegap-push.js"></script>
+
+  <script type="text/javascript">
+    // Config meteor phonegap
+    meteorPhonegap.init('Meteor', 'http://192.168.2.8:3000');
+    meteorPhonegap.initPush({ senderID: '315172380398' });
+  </script>
+
+<style type='text/css'>
+
+  body,html,iframe {
+    margin: 0;
+    padding: 0;
+    border: none;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+</head>
+<body>
+  <iframe id='Meteor'></iframe>
+</body>
+</html>
