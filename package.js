@@ -25,7 +25,7 @@ Package.on_use(function (api) {
           'ios.server.js',
           'notifyer.server.js'
           ], 'server');
-  api.export('_Notifyer', 'server');
+  api.export && api.export('_Notifyer', 'server');
 });
 
 
