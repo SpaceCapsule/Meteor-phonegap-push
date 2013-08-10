@@ -1,24 +1,31 @@
 Package.describe({
-  summary: "Meteor phonegap push, IOS and android"
+  summary: ""
 });
 
+Package.describe({
+  summary: "\u001b[32mv0.0.2\n"+
+  "\u001b[33m-----------------------------------------\n"+
+  "\u001b[0m Meteor push server for IOS and android   \n"+
+  "\u001b[0m                                          \n"+
+  "\u001b[33m-------------------------------------RaiX\n"
+});
+
+
+// Server-side push deps
 Npm.depends({
-        'apn' : '1.2.6',
-        'node-gcm' : '0.9.4'
+        'apn' : '1.3.8',
+        'node-gcm' : '0.9.6'
 });
 
 
 Package.on_use(function (api) {
-  //api.use('', 'client');
 
-  	api.add_files([
-					'phonegap.client.js'
-					//'generic.push.client.js'
-					], 'client');
-
-  	api.add_files([
-  					'android.server.js',
-  					'ios.server.js',
-  					'notifyer.server.js'
-  					], 'server');
+  api.add_files([
+          'android.server.js',
+          'ios.server.js',
+          'notifyer.server.js'
+          ], 'server');
+  api.export('_Notifyer', 'server');
 });
+
+

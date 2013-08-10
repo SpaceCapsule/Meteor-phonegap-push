@@ -6,4 +6,5 @@
 autopublish
 insecure
 preserve-inputs
+standard-app-packages
 phonegap-push

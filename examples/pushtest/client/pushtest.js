@@ -42,11 +42,12 @@ if (Meteor.isClient) {
         _.each(e, function(value, key) {
           myLog(key + ' = ' + value);
         });
-        if (e.payload.message)
+        if (e.payload.message) {
           Session.set('message', e.payload.message);
           Meteor.setTimeout(function() {
             Session.set('message', '');
           }, 4000);
+        }
       });
 
       PhoneGap.addEventListener('pushError', function(e) {
@@ -58,16 +59,17 @@ if (Meteor.isClient) {
       });
 
       PhoneGap.addEventListener('pushToken', function(e) {
-        console.log('------ pushToken -------');
+        myLog('------ pushToken -------');
         if (e.androidToken)
           myLog('Adroid Token: '+e.androidToken);
         if (e.iosToken)
           myLog('IOS Token: '+e.iosToken);
 
         if (e.androidToken) {
-          var id = userTokens.findOne({ owner: 1 });
-          if (id) userTokens.remove(id);
-          userTokens.insert({ owner: 1, androidToken: e.androidToken });
+          Meteor.call('setAdroidToken', 1, e.androidToken);
+        }
+        if (e.iosToken) {
+          Meteor.call('setIosToken', 1, e.iosToken);
         }
       });
 
@@ -85,7 +87,7 @@ if (Meteor.isClient) {
         myLog('MeteorGap version: ' + value);
       });
 
-       PhoneGap.getValue('device', function(value) { 
+      PhoneGap.getValue('device', function(value) { 
         myLog('Im on the ' + value.platform);
       });
 
