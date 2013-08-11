@@ -4,7 +4,9 @@ window.pushNotification;
 window.onNotificationGCM;
 window.onNotificationAPN;
 
-MeteorPhonegap.prototype.initPush = function(options) {
+MeteorCordovaPush = function() {};
+
+MeteorCordovaPush.prototype.initPush = function(options) {
 	var self = this;
 	var _options = {
 		senderID: (options.senderID)?''+options.senderID: '',
@@ -111,3 +113,7 @@ MeteorPhonegap.prototype.initPush = function(options) {
 
 } // EO Push
 
+// Export for Cordova push plugin
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = MeteorCordovaPush;
+}

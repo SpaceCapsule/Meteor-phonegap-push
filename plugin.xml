@@ -20,7 +20,7 @@
 
   <keywords>meteor,cordova,plugin,push</keywords>
 
-  <js-module src="www/meteor.cordova.push.js" name="MeteorCordova">
+  <js-module src="www/meteor.cordova.push.js" name="MeteorCordovaPush">
       <merges target="MeteorCordova" />
   </js-module>
 
