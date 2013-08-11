@@ -1,8 +1,8 @@
 // 
 
-var pushNotification;
-var onNotificationGCM;
-var onNotificationAPN;
+window.pushNotification;
+window.onNotificationGCM;
+window.onNotificationAPN;
 
 MeteorPhonegap.prototype.initPush = function(options) {
 	var self = this;
@@ -17,9 +17,9 @@ MeteorPhonegap.prototype.initPush = function(options) {
 	document.addEventListener('deviceready', function() {
 		try 
 		{ 
-	    	pushNotification = window.plugins.pushNotification;
-	    	onNotificationGCM = self.onNotificationGCM;
-	    	onNotificationAPN = self.onNotificationAPN;
+	    	window.pushNotification = window.plugins.pushNotification;
+	    	window.onNotificationGCM = self.onNotificationGCM;
+	    	window.onNotificationAPN = self.onNotificationAPN;
 	    	if (device.platform == 'android' || device.platform == 'Android') {
 	        	if (options.senderID)
 	        		pushNotification.register(self.successHandler, self.errorHandler, {

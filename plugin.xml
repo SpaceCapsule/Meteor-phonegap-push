@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="dk.gi2.plugins.MeteorCordova.push"
+  version="0.0.1">
+
+  <name>MeteorCordova Push</name>
+
+  <description>
+    This plugin allows Meteor to use push notifications
+  </description>
+
+  <info>
+    Remeber to checkout the documentation on https://github.com/raix/Meteor-phonegap-push
+  </info>
+
+  <author>Morten Henriksen aka RaiX</author>
+
+  <license>MIT</license>
+
+  <keywords>meteor,cordova,plugin,push</keywords>
+
+  <js-module src="www/meteor.cordova.push.js" name="MeteorCordova">
+      <merges target="MeteorCordova" />
+  </js-module>
+
+  <!-- We depend on MeteorCordova -->
+  <dependency id="dk.gi2.plugins.MeteorCordova" url="https://github.com/raix/Meteor-Cordova" />
+  
+  <engines>
+    <engine name="cordova" version=">=3.0.0" />
+  </engines>  
+
+  <!-- android -->
+  <platform name="android">
+
+  </platform>
+
+  <!-- ios -->
+  <platform name="ios">
+
+  </platform>
+</plugin>
