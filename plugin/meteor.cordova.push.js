@@ -94,9 +94,9 @@ MeteorCordova.prototype.initPush = function(options) {
 		try {
 			if (device.platform == 'android' || device.platform == 'Android') {
 
-				if (self._options.senderID) {
+				if (_options.senderID) {
 					pushNotification.register(self.successHandler, self.errorHandler, {
-						'senderID': self._options.senderID,
+						'senderID': _options.senderID,
 						'ecb': 'onNotificationGCM'
 					});
 				} else {
@@ -105,9 +105,9 @@ MeteorCordova.prototype.initPush = function(options) {
 
 			} else {
 				pushNotification.register(self.tokenHandler, self.errorHandler, {
-					'badge': self._options.badge,
-					'sound': self._options.sound,
-					'alert': self._options.alert,
+					'badge': _options.badge,
+					'sound': _options.sound,
+					'alert': _options.alert,
 					'ecb': 'onNotificationAPN'
 				});	// required!
 	    }
