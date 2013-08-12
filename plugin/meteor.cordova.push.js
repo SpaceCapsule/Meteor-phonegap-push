@@ -1,6 +1,9 @@
 // 
 
-window.pushNotification = window.plugins.pushNotification;
+var pushNotification = window.plugins.pushNotification;
+
+var onNotificationAPN;
+var onNotificationGCM;
 
 if (typeof MeteorCordova === 'undefined') {
 	throw new Error('MeteorCordova Push plugin requires MeteorCordova to be loaded');
@@ -16,7 +19,7 @@ MeteorCordova.prototype.initPush = function(options) {
 	};
 
 	// handle APNS notifications for iOS
-	window.onNotificationAPN = function(e) {
+	onNotificationAPN = function(e) {
 	    if (e.alert) {
 	         navigator.notification.alert(e.alert);
 	    }
@@ -34,7 +37,7 @@ MeteorCordova.prototype.initPush = function(options) {
 	};
 
 	// handle GCM notifications for Android
-	window.onNotificationGCM = function(e) {
+	onNotificationGCM = function(e) {
 		console.log('onNotificationGCM is called');
 	    switch( e.event )
 	    {
