@@ -1,11 +1,11 @@
 /*
-  A general purpose user notifyer
+  A general purpose user CordovaPush
   ios, android, mail, twitter?, facebook?, sms?, snailMail? :)
 
   Phonegap generic :
   https://github.com/phonegap-build/PushPlugin
  */
-_Notifyer = function(options) {
+CordovaPush = function(options) {
     var self = this;
     self._options = _.extend(options, {
         ios: {},

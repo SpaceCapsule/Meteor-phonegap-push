@@ -1,10 +1,14 @@
 // 
 
-var pushNotification;
-var onNotificationGCM;
-var onNotificationAPN;
+pushNotification;
+onNotificationGCM;
+onNotificationAPN;
 
-MeteorPhonegap.prototype.initPush = function(options) {
+if (typeof MeteorCordova === 'undefined') {
+	throw new Error('MeteorCordova Push plugin requires MeteorCordova to be loaded');
+}
+
+MeteorCordova.prototype.initPush = function(options) {
 	var self = this;
 	var _options = {
 		senderID: (options.senderID)?''+options.senderID: '',
@@ -110,4 +114,3 @@ MeteorPhonegap.prototype.initPush = function(options) {
 	}
 
 } // EO Push
-

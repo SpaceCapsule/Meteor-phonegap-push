@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   id="dk.gi2.plugins.MeteorCordova.push"
-  version="0.0.1">
+  version="0.0.3">
 
   <name>MeteorCordova Push</name>
 
@@ -20,10 +20,11 @@
 
   <keywords>meteor,cordova,plugin,push</keywords>
 
-  <js-module src="www/meteor.cordova.push.js" name="MeteorCordovaPush">
+  <!-- <js-module src="plugin/meteor.cordova.push.js" name="MeteorCordovaPush">
       <merges target="MeteorCordova" />
-  </js-module>
+  </js-module> -->
 
+  <asset src="plugin/meteor.cordova.push.js" target="meteor.cordova.push.js" />
   <!-- We depend on MeteorCordova -->
   <!-- <dependency id="dk.gi2.plugins.MeteorCordova" url="https://github.com/raix/Meteor-Cordova" />-->
   

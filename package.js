@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Package.describe({
-  summary: "\u001b[32mv0.0.2\n"+
+  summary: "\u001b[32mv0.0.3\n"+
   "\u001b[33m-----------------------------------------\n"+
   "\u001b[0m Meteor push server for IOS and android   \n"+
   "\u001b[0m                                          \n"+
@@ -23,9 +23,9 @@ Package.on_use(function (api) {
   api.add_files([
           'android.server.js',
           'ios.server.js',
-          'notifyer.server.js'
+          'push.server.js'
           ], 'server');
-  api.export && api.export('_Notifyer', 'server');
+  api.export && api.export('CordovaPush', 'server');
 });
 
 
