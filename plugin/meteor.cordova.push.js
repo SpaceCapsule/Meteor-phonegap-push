@@ -40,7 +40,7 @@ MeteorCordova.prototype.initPush = function(options) {
 	    {
 	        case 'registered':
 			if ( e.regid.length > 0 ) {
-				//console.log('ANDROID TOKEN: '+e.regid);
+				console.log('ANDROID TOKEN: '+e.regid);
 				self.triggerEvent('pushToken', { 'androidToken': ''+e.regid } ); //regID??
 			}
 	        break;
