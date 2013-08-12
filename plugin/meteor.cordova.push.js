@@ -2,8 +2,13 @@
 
 var pushNotification = window.plugins.pushNotification;
 
-var onNotificationAPN;
-var onNotificationGCM;
+var onNotificationAPN = function(e) {
+	console.log('This function should be overwritten??');
+};
+
+var onNotificationGCM = function(e) {
+	console.log('This function should be overwritten??');
+};
 
 if (typeof MeteorCordova === 'undefined') {
 	throw new Error('MeteorCordova Push plugin requires MeteorCordova to be loaded');
