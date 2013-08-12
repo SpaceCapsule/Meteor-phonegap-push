@@ -31,7 +31,7 @@ MeteorCordova.prototype.initPush = function(options) {
 	    }
 
 		self.triggerEvent('pushLaunch', e);//e.alert });
-	}
+	};
 
 	// handle GCM notifications for Android
 	window.onNotificationGCM = function(e) {
@@ -48,9 +48,9 @@ MeteorCordova.prototype.initPush = function(options) {
 	        case 'message':
 		
 				// if this flag is set, this notification happened while we were in the foreground.
-	        	// you might want to play a sound to get the user's attention, throw up a dialog, etc.
-	        	if (e.foreground)
-	        	{
+					// you might want to play a sound to get the user's attention, throw up a dialog, etc.
+					if (e.foreground)
+					{
 					// if the notification contains a soundname, play it.
 					// var my_media = new Media("/android_asset/www/"+e.soundname);
 					// my_media.play();
@@ -65,44 +65,46 @@ MeteorCordova.prototype.initPush = function(options) {
 	        break;
 
 	    }
-	}
+	};
 
 	self.tokenHandler = function(result) {
 		//console.log('GOT IOS TOKEN: '+result);
 		self.triggerEvent('pushToken', { iosToken: result });
-	}
+	};
 
 	self.successHandler = function(result) {
 		self.triggerEvent('pushSuccess', { success: result });
-	}
+	};
 
 	self.errorHandler = function(error) {
 		self.triggerEvent('pushError', { error: error });
-	}
+	};
 
 		// Initialize on ready
 	document.addEventListener('deviceready', function() {
-		try { 
-    	if (device.platform == 'android' || device.platform == 'Android') {
-      	if (options.senderID) {
-      		pushNotification.register(self.successHandler, self.errorHandler, {
-      			"senderID": _options.senderID, "ecb": "onNotificationGCM" })
-      	} else {
-      		throw new Error('senderID not set in options, required on android');
-      	}
+		try {
+			if (device.platform == 'android' || device.platform == 'Android') {
+
+				if (options.senderID) {
+					pushNotification.register(self.successHandler, self.errorHandler, {
+						'senderID': _options.senderID, 'ecb': 'onNotificationGCM' });
+				} else {
+					throw new Error('senderID not set in options, required on android');
+				}
 
 			} else {
-      	pushNotification.register(self.tokenHandler, self.errorHandler, {
-      					"badge": _options.badge,
-      					"sound": _options.sound,
-      					"alert": _options.alert,
-      					"ecb": "onNotificationAPN" });	// required!
+				pushNotification.register(self.tokenHandler, self.errorHandler, {
+					'badge': _options.badge,
+					'sound': _options.sound,
+					'alert': _options.alert,
+					'ecb': 'onNotificationAPN'
+				});	// required!
 	    }
-	  } catch(err) { 
-			console.log('There was an error starting up push'); 
-			console.log('Error description: ' + err.message); 
+	  } catch(err) {
+			console.log('There was an error starting up push');
+			console.log('Error description: ' + err.message);
 			self.triggerEvent('pushError', { error: err });
-		} 
+		}
 
 		console.log('PLUGIN: push is started');
 	}, true);
