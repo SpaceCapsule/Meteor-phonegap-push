@@ -25,6 +25,7 @@ MeteorCordova.prototype.initPush = function(options) {
 
 	// handle APNS notifications for iOS
 	onNotificationAPN = function(e) {
+		console.log('onNotificationAPN Called');
 	    if (e.alert) {
 	         navigator.notification.alert(e.alert);
 	    }
@@ -93,18 +94,20 @@ MeteorCordova.prototype.initPush = function(options) {
 		try {
 			if (device.platform == 'android' || device.platform == 'Android') {
 
-				if (options.senderID) {
+				if (self._options.senderID) {
 					pushNotification.register(self.successHandler, self.errorHandler, {
-						'senderID': _options.senderID, 'ecb': 'onNotificationGCM' });
+						'senderID': self._options.senderID,
+						'ecb': 'onNotificationGCM'
+					});
 				} else {
 					throw new Error('senderID not set in options, required on android');
 				}
 
 			} else {
 				pushNotification.register(self.tokenHandler, self.errorHandler, {
-					'badge': _options.badge,
-					'sound': _options.sound,
-					'alert': _options.alert,
+					'badge': self._options.badge,
+					'sound': self._options.sound,
+					'alert': self._options.alert,
 					'ecb': 'onNotificationAPN'
 				});	// required!
 	    }
