@@ -1,8 +1,8 @@
 // 
 
-pushNotification;
-onNotificationGCM;
-onNotificationAPN;
+var pushNotification;
+var onNotificationGCM;
+var onNotificationAPN;
 
 if (typeof MeteorCordova === 'undefined') {
 	throw new Error('MeteorCordova Push plugin requires MeteorCordova to be loaded');
