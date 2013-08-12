@@ -1,8 +1,6 @@
 // 
 
-var pushNotification;
-var onNotificationGCM;
-var onNotificationAPN;
+window.pushNotification = window.plugins.pushNotification;
 
 if (typeof MeteorCordova === 'undefined') {
 	throw new Error('MeteorCordova Push plugin requires MeteorCordova to be loaded');
@@ -18,7 +16,7 @@ MeteorCordova.prototype.initPush = function(options) {
 	};
 
 	// handle APNS notifications for iOS
-	self.onNotificationAPN = function(e) {
+	window.onNotificationAPN = function(e) {
 	    if (e.alert) {
 	         navigator.notification.alert(e.alert);
 	    }
@@ -36,7 +34,7 @@ MeteorCordova.prototype.initPush = function(options) {
 	}
 
 	// handle GCM notifications for Android
-	self.onNotificationGCM = function(e) {
+	window.onNotificationGCM = function(e) {
 		console.log('onNotificationGCM is called');
 	    switch( e.event )
 	    {
@@ -84,27 +82,23 @@ MeteorCordova.prototype.initPush = function(options) {
 
 		// Initialize on ready
 	document.addEventListener('deviceready', function() {
-		try 
-		{ 
-	    	pushNotification = window.plugins.pushNotification;
-	    	onNotificationGCM = self.onNotificationGCM;
-	    	onNotificationAPN = self.onNotificationAPN;
-	    	if (device.platform == 'android' || device.platform == 'Android') {
-	        	if (options.senderID)
-	        		pushNotification.register(self.successHandler, self.errorHandler, {
-	        			"senderID": _options.senderID, "ecb": "onNotificationGCM" })
-	        	else
-	        		throw new Error('senderID not set in options, required on android');
+		try { 
+    	if (device.platform == 'android' || device.platform == 'Android') {
+      	if (options.senderID) {
+      		pushNotification.register(self.successHandler, self.errorHandler, {
+      			"senderID": _options.senderID, "ecb": "onNotificationGCM" })
+      	} else {
+      		throw new Error('senderID not set in options, required on android');
+      	}
+
 			} else {
-	        	pushNotification.register(self.tokenHandler, self.errorHandler, {
-	        					"badge": _options.badge,
-	        					"sound": _options.sound,
-	        					"alert": _options.alert,
-	        					"ecb": "onNotificationAPN" });	// required!
-	    	}
+      	pushNotification.register(self.tokenHandler, self.errorHandler, {
+      					"badge": _options.badge,
+      					"sound": _options.sound,
+      					"alert": _options.alert,
+      					"ecb": "onNotificationAPN" });	// required!
 	    }
-		catch(err) 
-		{ 
+	  } catch(err) { 
 			console.log('There was an error starting up push'); 
 			console.log('Error description: ' + err.message); 
 			self.triggerEvent('pushError', { error: err });
