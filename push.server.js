@@ -7,7 +7,7 @@
  */
 CordovaPush = function(options) {
     var self = this;
-    self._options = _.extend(options, {
+    self._options = _.extend(options || {}, {
         ios: {},
         android: {},
         mail: {},
@@ -35,28 +35,43 @@ CordovaPush = function(options) {
         // https://npmjs.org/package/apn
 
         // After requesting the certificate from Apple, export your private key as a .p12 file and download the .cer file from the iOS Provisioning Portal.
-
+        
+        // gateway.push.apple.com, port 2195
+        // gateway.sandbox.push.apple.com, port 2195
+        
         // Now, in the directory containing cert.cer and key.p12 execute the following commands to generate your .pem files:
         // $ openssl x509 -in cert.cer -inform DER -outform PEM -out cert.pem
         // $ openssl pkcs12 -in key.p12 -out key.pem -nodes
 
-        // var apn = Npm.require('apn');
+        var apn = Npm.require('apn');
 
-        // var options = { "gateway": "gateway.sandbox.push.apple.com" };
+        var optionsDevelopment = {
+            'certData': 'apns-dev-cert.pem',
+            'keyData': 'apns-dev-key.pem',
+            'gateway': 'gateway.sandbox.push.apple.com',
 
-        // var apnConnection = new apn.Connection(options);
+        };
 
-        // var myDevice = new apn.Device(token);
+        var optionsProduction = {
+            'certData': 'apns-prod-cert.pem',
+            'keyData': 'apns-prod-key.pem',
+            'gateway': 'gateway.push.apple.com'
 
-        // var note = new apn.Notification();
+        };
 
-        // note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-        // note.badge = count;
-        // note.sound = "";
-        // note.alert = "\uD83D\uDCE7 \u2709 " + text;
-        // note.payload = {'messageFrom': from };
+        var apnConnection = new apn.Connection( optionsDevelopment );
 
-        // apnConnection.pushNotification(note, myDevice);
+        var myDevice = new apn.Device(token);
+
+        var note = new apn.Notification();
+
+        note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+        note.badge = count;
+        note.sound = "";
+        note.alert = "\uD83D\uDCE7 \u2709 " + text;
+        note.payload = {'messageFrom': from };
+
+        apnConnection.pushNotification(note, myDevice);
 
     };
 

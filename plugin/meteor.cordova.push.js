@@ -1,26 +1,34 @@
-// 
+var onNotificationAPN;
+var onNotificationGCM;
 
-var pushNotification = window.plugins.pushNotification;
-
-var onNotificationAPN = function(e) {
-	console.log('This function should be overwritten??');
-};
-
-var onNotificationGCM = function(e) {
-	console.log('This function should be overwritten??');
-};
 
 if (typeof MeteorCordova === 'undefined') {
 	throw new Error('MeteorCordova Push plugin requires MeteorCordova to be loaded');
 }
 
 MeteorCordova.prototype.initPush = function(options) {
+	console.log('PUSH InitPush');
 	var self = this;
 	var _options = {
 		senderID: (options.senderID)?''+options.senderID: '',
 		badge: (options.badge === false)?'false': 'true',
 		sound: (options.sound === false)?'false': 'true',
 		alert: (options.alert === false)?'false': 'true'
+	};
+
+	var pushNotification = window.plugins.pushNotification;
+
+	self.tokenHandler = function(result) {
+		//console.log('GOT IOS TOKEN: '+result);
+		self.triggerEvent('pushToken', { iosToken: result });
+	};
+
+	self.successHandler = function(result) {
+		self.triggerEvent('pushSuccess', { success: result });
+	};
+
+	self.errorHandler = function(error) {
+		self.triggerEvent('pushError', { error: error });
 	};
 
 	// handle APNS notifications for iOS
@@ -36,7 +44,7 @@ MeteorCordova.prototype.initPush = function(options) {
 	    }
 	    
 	    if (e.badge) {
-	        pushNotification.setApplicationIconBadgeNumber(successHandler, e.badge);
+	        pushNotification.setApplicationIconBadgeNumber(self.successHandler, e.badge);
 	    }
 
 		self.triggerEvent('pushLaunch', e);//e.alert });
@@ -76,21 +84,12 @@ MeteorCordova.prototype.initPush = function(options) {
 	    }
 	};
 
-	self.tokenHandler = function(result) {
-		//console.log('GOT IOS TOKEN: '+result);
-		self.triggerEvent('pushToken', { iosToken: result });
-	};
-
-	self.successHandler = function(result) {
-		self.triggerEvent('pushSuccess', { success: result });
-	};
-
-	self.errorHandler = function(error) {
-		self.triggerEvent('pushError', { error: error });
-	};
-
 		// Initialize on ready
 	document.addEventListener('deviceready', function() {
+		// console.log('Push Registration');
+		// onNotificationAPN = self.onNotificationAPN;
+		// onNotificationGCM = self.onNotificationGCM;
+
 		try {
 			if (device.platform == 'android' || device.platform == 'Android') {
 
