@@ -5,33 +5,15 @@
   Phonegap generic :
   https://github.com/phonegap-build/PushPlugin
  */
+
+// getText / getBinary
+
+
 CordovaPush = function(options) {
     var self = this;
-    self._options = _.extend(options || {}, {
-        ios: {},
-        android: {},
-        mail: {},
-        twitter: {},
-        facebook: {},
-        linkedIn: {},
-        sms: {},
-        mms: {},
-        snailMail: {}
-    });
-
-   // self.iosConnection = (self._options.ios)? new apn.Connection(self._options.ios) : null;
-
-    self.sendNotification = function(userId, options) {
-        if (self._options.ios) {
-
-        }
-        if (self._options.android) {
-
-        }
-    };
 
     // (cert.pem and key.pem)
-    self.sendIOS = function(from, userTokens, title, text, count) {
+    self.sendIOS = function(from, userToken, title, text, count) {
         // https://npmjs.org/package/apn
 
         // After requesting the certificate from Apple, export your private key as a .p12 file and download the .cer file from the iOS Provisioning Portal.
@@ -45,31 +27,19 @@ CordovaPush = function(options) {
 
         var apn = Npm.require('apn');
 
-        var optionsDevelopment = {
-            'certData': 'apns-dev-cert.pem',
-            'keyData': 'apns-dev-key.pem',
-            'gateway': 'gateway.sandbox.push.apple.com',
+        var apnConnection = new apn.Connection( options );
 
-        };
-
-        var optionsProduction = {
-            'certData': 'apns-prod-cert.pem',
-            'keyData': 'apns-prod-key.pem',
-            'gateway': 'gateway.push.apple.com'
-
-        };
-
-        var apnConnection = new apn.Connection( optionsDevelopment );
-
-        var myDevice = new apn.Device(token);
+        var myDevice = new apn.Device(userToken);
 
         var note = new apn.Notification();
 
         note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
         note.badge = count;
-        note.sound = "";
-        note.alert = "\uD83D\uDCE7 \u2709 " + text;
+        //note.sound = "";
+        note.alert = text;
         note.payload = {'messageFrom': from };
+
+        console.log('I:Send message to: ' + userToken);
 
         apnConnection.pushNotification(note, myDevice);
 
@@ -89,10 +59,10 @@ CordovaPush = function(options) {
                 msgcnt: count
             }
         });
-        var sender = new gcm.Sender('AIzaSyAR2xFXOiZfb2X70pY4PZkbzidBL2MddSM');
+        var sender = new gcm.Sender('AIzaSyBbw-15fIlD2lMseaVvSH5CL4Z-490k3CA');
 
         _.each(userTokens, function(value, key) {
-            console.log('Send message to: ' + value);
+            console.log('A:Send message to: ' + value);
         });
         
         /*message.addData('title', title);
@@ -119,7 +89,26 @@ CordovaPush = function(options) {
         // sender.sendNoRetry(message, userTokens, function (result) {
         // console.log(result); });
         // **/        
-    } // EO sendAndroid
+    }; // EO sendAndroid
+
+    self.initFeedback = function() {
+        var apn = Npm.require('apn');
+
+        var feedbackOptions = {
+            "batchFeedback": true,
+            "interval": 1000,
+            'address': 'feedback.sandbox.push.apple.com'
+        };
+
+        var feedback = new apn.Feedback(feedbackOptions);
+        feedback.on("feedback", function(devices) {
+            devices.forEach(function(item) {
+                // Do something with item.device and item.time;
+                console.log('A:PUSH FEEDBACK ' + item.device + ' - ' + item.time);
+            });
+        });
+    }
+
 
     return self;
 };
