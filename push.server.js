@@ -9,7 +9,7 @@
 // getText / getBinary
 
 
-CordovaPush = function(options) {
+CordovaPush = function(androidServerKey, options) {
     var self = this;
 
     // (cert.pem and key.pem)
@@ -39,7 +39,7 @@ CordovaPush = function(options) {
         note.alert = text;
         note.payload = {'messageFrom': from };
 
-        console.log('I:Send message to: ' + userToken);
+        console.log('I:Send message to: ' + userToken + ' count=' + count);
 
         apnConnection.pushNotification(note, myDevice);
 
@@ -59,10 +59,10 @@ CordovaPush = function(options) {
                 msgcnt: count
             }
         });
-        var sender = new gcm.Sender('AIzaSyBbw-15fIlD2lMseaVvSH5CL4Z-490k3CA');
+        var sender = new gcm.Sender(androidServerKey);
 
         _.each(userTokens, function(value, key) {
-            console.log('A:Send message to: ' + value);
+            console.log('A:Send message to: ' + value + ' count=' + count);
         });
         
         /*message.addData('title', title);
@@ -71,23 +71,21 @@ CordovaPush = function(options) {
         message.collapseKey = 'sitDrift';
         message.delayWhileIdle = true;
         message.timeToLive = 3;*/
-         
-        // // At least one token is required - each app registers a different token
-        // userTokens.push('APA91bFobAwN7P3Okxy2al8RI12VcJFUS-giXWTOoWXIObtSPOE1h7FuH1VPLBPgshDI_Fp7aIYVET-ssvGUErlWYA0cKPGhoXT1daqyDsEfem9ZtgZNRhQFv7kLCIVSigYlpMluToPiSHSsFSEdtCDfKoOZqNPgfs');
-         
+             
         // /**
         //  * Parameters: message-literal, userTokens-array, No. of retries, callback-function
         //  */
-        sender.send(message, userTokens, 4, function (err, result) {
+        sender.send(message, userTokens, 1, function (err, result) {
             if (err) {
-                console.log('ERROR: result of sender: ' + result);
+                console.log('ANDROID ERROR: result of sender: ' + result);
             } else {
-                console.log('result of sender: ' + JSON.stringify(result));
+                console.log('ANDROID: Result of sender: ' + JSON.stringify(result));
             }
         });
         // /** Use the following line if you want to send the message without retries
         // sender.sendNoRetry(message, userTokens, function (result) {
-        // console.log(result); });
+        //     console.log('ANDROID: ' + JSON.stringify(result));
+        // });
         // **/        
     }; // EO sendAndroid
 
@@ -97,7 +95,7 @@ CordovaPush = function(options) {
         var feedbackOptions = {
             "batchFeedback": true,
             "interval": 1000,
-            'address': 'feedback.sandbox.push.apple.com'
+            'address': 'feedback.push.apple.com'
         };
 
         var feedback = new apn.Feedback(feedbackOptions);

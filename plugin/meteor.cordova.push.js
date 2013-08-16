@@ -1,5 +1,8 @@
-var onNotificationAPN;
-var onNotificationGCM;
+var onNotificationAPN = function(e) {
+};
+
+var onNotificationGCM = function(e) {
+};
 
 
 if (typeof MeteorCordova === 'undefined') {
@@ -7,116 +10,131 @@ if (typeof MeteorCordova === 'undefined') {
 }
 
 MeteorCordova.prototype.initPush = function(options) {
-	console.log('PUSH InitPush');
 	var self = this;
-	var _options = {
+	self._options = {
 		senderID: (options.senderID)?''+options.senderID: '',
 		badge: (options.badge === false)?'false': 'true',
 		sound: (options.sound === false)?'false': 'true',
 		alert: (options.alert === false)?'false': 'true'
 	};
 
-	var pushNotification = window.plugins.pushNotification;
-
 	self.tokenHandler = function(result) {
 		//console.log('GOT IOS TOKEN: '+result);
-		self.triggerEvent('pushToken', { iosToken: result });
+		if (self.triggerEvent) {						
+			self.triggerEvent('pushToken', { iosToken: result });
+		}
 	};
 
 	self.successHandler = function(result) {
-		self.triggerEvent('pushSuccess', { success: result });
+		if (self.triggerEvent) {						
+			self.triggerEvent('pushSuccess', { success: result });
+		}	
 	};
 
 	self.errorHandler = function(error) {
-		self.triggerEvent('pushError', { error: error });
+		if (self.triggerEvent) {						
+			self.triggerEvent('pushError', { error: error });
+		}	
 	};
 
 	// handle APNS notifications for iOS
 	onNotificationAPN = function(e) {
-		console.log('onNotificationAPN Called');
-	    if (e.alert) {
-	         navigator.notification.alert(e.alert);
-	    }
-	        
-	    if (e.sound) {
-	        var snd = new Media(e.sound);
-	        snd.play();
-	    }
-	    
-	    if (e.badge) {
-	        pushNotification.setApplicationIconBadgeNumber(self.successHandler, e.badge);
-	    }
+		var pushNotification = window.plugins.pushNotification;
+		//console.log('onNotificationAPN Called');
 
-		self.triggerEvent('pushLaunch', e);//e.alert });
+    if (e.alert) {
+    		navigator.notification.vibrate(500);
+        navigator.notification.alert(e.alert);
+    }
+        
+    if (e.sound) {
+        var snd = new Media(e.sound);
+        snd.play();
+    }
+    
+    if (e.badge) {
+        pushNotification.setApplicationIconBadgeNumber(self.successHandler, e.badge);
+    }
+
+		if (self.triggerEvent) {						
+			self.triggerEvent('pushLaunch', e);//e.alert });
+		}
 	};
 
 	// handle GCM notifications for Android
 	onNotificationGCM = function(e) {
-		console.log('onNotificationGCM is called');
-	    switch( e.event )
-	    {
-	        case 'registered':
-			if ( e.regid.length > 0 ) {
-				console.log('ANDROID TOKEN: '+e.regid);
-				self.triggerEvent('pushToken', { 'androidToken': ''+e.regid } ); //regID??
-			}
-	        break;
-	        
-	        case 'message':
-		
+		var pushNotification = window.plugins.pushNotification;
+		switch( e.event ) {
+			case 'registered':
+				if ( e.regid.length > 0 ) {
+					if (self.triggerEvent) {						
+						self.triggerEvent('pushToken', { 'androidToken': ''+e.regid } ); //regID??
+					}
+				}
+			break;
+
+			case 'message':
 				// if this flag is set, this notification happened while we were in the foreground.
-					// you might want to play a sound to get the user's attention, throw up a dialog, etc.
-					if (e.foreground)
-					{
-					// if the notification contains a soundname, play it.
-					// var my_media = new Media("/android_asset/www/"+e.soundname);
-					// my_media.play();
+				// you might want to play a sound to get the user's attention, throw up a dialog, etc.
+				if (e.foreground)
+				{
+				// if the notification contains a soundname, play it.
+				// var my_media = new Media("/android_asset/www/"+e.soundname);
+				// my_media.play();
+				} else {
+	    		navigator.notification.vibrate(500);
+					navigator.notification.alert(e.payload.message);			
 				}
 
-				self.triggerEvent('pushLaunch', e ); // e.foreground, e.foreground, Coldstart or background
+				if (self.triggerEvent) {						
+					self.triggerEvent('pushLaunch', e ); // e.foreground, e.foreground, Coldstart or background
+				}
 				// e.payload.message, e.payload.msgcnt, e.msg, e.soundname
-	        break;
-	        
-	        case 'error':
-				self.triggerEvent('pushError', e ); // e.msg
-	        break;
+			break;
 
-	    }
+			case 'error':
+				if (self.triggerEvent) {						
+					self.triggerEvent('pushError', e ); // e.msg
+				}
+			break;
+		}
 	};
 
 		// Initialize on ready
 	document.addEventListener('deviceready', function() {
-		// console.log('Push Registration');
-		// onNotificationAPN = self.onNotificationAPN;
-		// onNotificationGCM = self.onNotificationGCM;
+		var pushNotification = window.plugins.pushNotification;
+			// console.log('Push Registration');
+			// onNotificationAPN = self.onNotificationAPN;
+			// onNotificationGCM = self.onNotificationGCM;
 
-		try {
-			if (device.platform == 'android' || device.platform == 'Android') {
+			try {
+				if (device.platform == 'android' || device.platform == 'Android') {
 
-				if (_options.senderID) {
-					pushNotification.register(self.successHandler, self.errorHandler, {
-						'senderID': _options.senderID,
-						'ecb': 'onNotificationGCM'
-					});
+					if (self._options.senderID) {
+						pushNotification.register(self.successHandler, self.errorHandler, {
+							'senderID': self._options.senderID,
+							'ecb': 'onNotificationGCM'
+						});
+					} else {
+						throw new Error('senderID not set in options, required on android');
+					}
+
 				} else {
-					throw new Error('senderID not set in options, required on android');
-				}
+					pushNotification.register(self.tokenHandler, self.errorHandler, {
+						'badge': self._options.badge,
+						'sound': self._options.sound,
+						'alert': self._options.alert,
+						'ecb': 'onNotificationAPN'
+					});	// required!
+		    }
+		  } catch(err) {
+				// console.log('There was an error starting up push');
+				// console.log('Error description: ' + err.message);
+				if (self.triggerEvent) {						
+					self.triggerEvent('pushError', { error: err });
+				}			
+			}
 
-			} else {
-				pushNotification.register(self.tokenHandler, self.errorHandler, {
-					'badge': _options.badge,
-					'sound': _options.sound,
-					'alert': _options.alert,
-					'ecb': 'onNotificationAPN'
-				});	// required!
-	    }
-	  } catch(err) {
-			console.log('There was an error starting up push');
-			console.log('Error description: ' + err.message);
-			self.triggerEvent('pushError', { error: err });
-		}
-
-		console.log('PLUGIN: push is started');
 	}, true);
 
 }; // EO Push

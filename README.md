@@ -1,6 +1,47 @@
 #Phonegap-push
 Meteor push server implementation for push notifications to android and iOS.
 
+```js
+// Files are placed in the `/private` folder:
+var apnsProdCert = Assets.getBinary('apnProdCert.pem');
+var apnsProdKey = Assets.getBinary('apnProdKey.pem');
+var apnsDevCert = Assets.getBinary('apnDevCert.pem');
+var apnsDevKey = Assets.getBinary('apnDevKey.pem');
+
+var optionsDevelopment = {
+    'passphrase': 'Pass phrase',
+    'certData': apnsDevCert,
+    'keyData': apnsDevKey,
+    'gateway': 'gateway.sandbox.push.apple.com',
+
+};
+
+var optionsProduction = {
+    'passphrase': 'Pass phrase',
+    'certData': apnsProdCert,
+    'keyData': apnsProdKey,
+    'gateway': 'gateway.push.apple.com'
+
+};
+
+var pushServer = new CordovaPush('Android server key', optionsProduction );
+
+
+// Do some clever stuff like figuring out what apps are subscribing to certain push messages
+
+pushServer.initFeedback();
+
+// One can broadcast to the androids by pushing them to an array or just send one at a time:
+pushServer.sendAndroid(messageFrom, [androidToken], messageTitle, messageText, user.msgCount);
+
+// Send to iOS one at a time
+pushServer.sendIOS(messageFrom, iosToken, messageTitle, messageText, user.msgCount);
+```
+*Not sure if badge counter is supported on android*
+
+##TODO:
+* Have an app collection with appId´s and mapped settings/details and push token + badge counter
+
 ##Certificates
 
 [Great writeup by Ali](http://www.raywenderlich.com/32960/apple-push-notification-services-in-ios-6-tutorial-part-1)
