@@ -12,6 +12,13 @@
 CordovaPush = function(androidServerKey, options) {
     var self = this;
 
+    // This function is called when a token is replaced on a device - normally
+    // this should not happen, but if it does we should take action on it
+    self.replaceToken = (typeof options.onReplace === 'function')?
+                    options.onReplace:function(oldToken, newToken) {
+                        console.log('Replace token: ' + oldToken + ' -- ' + newToken);
+                    };
+
     // (cert.pem and key.pem)
     self.sendIOS = function(from, userToken, title, text, count) {
         // https://npmjs.org/package/apn
@@ -47,12 +54,14 @@ CordovaPush = function(androidServerKey, options) {
 
     self.sendAndroid = function(from, userTokens, title, text, count) {
         var gcm = Npm.require('node-gcm');
+        var Fiber = Npm.require('fibers');
          
         //var message = new gcm.Message();
         var message = new gcm.Message({
             collapseKey: from,
-            delayWhileIdle: true,
-            timeToLive: 3,
+        //    delayWhileIdle: true,
+        //    timeToLive: 4,
+        //    restricted_package_name: 'dk.gi2.driftsstatus'
             data: {
                 title: title,
                 message: text,
@@ -75,11 +84,29 @@ CordovaPush = function(androidServerKey, options) {
         // /**
         //  * Parameters: message-literal, userTokens-array, No. of retries, callback-function
         //  */
-        sender.send(message, userTokens, 1, function (err, result) {
+
+        var userToken = (userTokens.length === 1)?userTokens[0]:null;
+        
+        sender.send(message, userTokens, 5, function (err, result) {
             if (err) {
                 console.log('ANDROID ERROR: result of sender: ' + result);
             } else {
                 console.log('ANDROID: Result of sender: ' + JSON.stringify(result));
+                if (result.canonical_ids === 1 && userToken) {
+
+                    // This is an old device, token is replaced
+                    Fiber(function(self) {
+                        // Run in fiber
+                        self.callback(self.oldToken, self.newToken);
+
+                    }).run({
+                        oldToken: { androidToken: userToken },
+                        newToken: { androidToken: result.results[0].registration_id }, 
+                        callback: self.replaceToken
+                    });
+                    //self.replaceToken({ androidToken: userToken }, { androidToken: result.results[0].registration_id });
+
+                }
             }
         });
         // /** Use the following line if you want to send the message without retries
@@ -105,7 +132,7 @@ CordovaPush = function(androidServerKey, options) {
                 console.log('A:PUSH FEEDBACK ' + item.device + ' - ' + item.time);
             });
         });
-    }
+    };
 
 
     return self;
