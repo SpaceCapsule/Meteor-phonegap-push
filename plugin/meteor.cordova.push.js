@@ -43,13 +43,13 @@ MeteorCordova.prototype.initPush = function(options) {
 		//console.log('onNotificationAPN Called');
 
     if (e.alert) {
-    		navigator.notification.vibrate(500);
-        navigator.notification.alert(e.alert);
+    		// navigator.notification.vibrate(500);
+      //   navigator.notification.alert(e.alert);
     }
         
     if (e.sound) {
-        var snd = new Media(e.sound);
-        snd.play();
+        // var snd = new Media(e.sound);
+        // snd.play();
     }
     
     if (e.badge) {
@@ -82,8 +82,8 @@ MeteorCordova.prototype.initPush = function(options) {
 				// var my_media = new Media("/android_asset/www/"+e.soundname);
 				// my_media.play();
 				} else {
-	    		navigator.notification.vibrate(500);
-					navigator.notification.alert(e.payload.message);			
+	    // 		navigator.notification.vibrate(500);
+					// navigator.notification.alert(e.payload.message);			
 				}
 
 				if (self.triggerEvent) {						
@@ -101,40 +101,42 @@ MeteorCordova.prototype.initPush = function(options) {
 	};
 
 		// Initialize on ready
-	document.addEventListener('deviceready', function() {
-		var pushNotification = window.plugins.pushNotification;
-			// console.log('Push Registration');
-			// onNotificationAPN = self.onNotificationAPN;
-			// onNotificationGCM = self.onNotificationGCM;
+	if (typeof document.addEventListener !== 'undefined') {
+		document.addEventListener('deviceready', function() {
+			var pushNotification = window.plugins.pushNotification;
+				// console.log('Push Registration');
+				// onNotificationAPN = self.onNotificationAPN;
+				// onNotificationGCM = self.onNotificationGCM;
 
-			try {
-				if (device.platform == 'android' || device.platform == 'Android') {
+				try {
+					if (device.platform == 'android' || device.platform == 'Android') {
 
-					if (self._options.senderID) {
-						pushNotification.register(self.successHandler, self.errorHandler, {
-							'senderID': self._options.senderID,
-							'ecb': 'onNotificationGCM'
-						});
+						if (self._options.senderID) {
+							pushNotification.register(self.successHandler, self.errorHandler, {
+								'senderID': self._options.senderID,
+								'ecb': 'onNotificationGCM'
+							});
+						} else {
+							throw new Error('senderID not set in options, required on android');
+						}
+
 					} else {
-						throw new Error('senderID not set in options, required on android');
-					}
+						pushNotification.register(self.tokenHandler, self.errorHandler, {
+							'badge': self._options.badge,
+							'sound': self._options.sound,
+							'alert': self._options.alert,
+							'ecb': 'onNotificationAPN'
+						});	// required!
+			    }
+			  } catch(err) {
+					// console.log('There was an error starting up push');
+					// console.log('Error description: ' + err.message);
+					if (self.triggerEvent) {						
+						self.triggerEvent('pushError', { error: err });
+					}			
+				}
 
-				} else {
-					pushNotification.register(self.tokenHandler, self.errorHandler, {
-						'badge': self._options.badge,
-						'sound': self._options.sound,
-						'alert': self._options.alert,
-						'ecb': 'onNotificationAPN'
-					});	// required!
-		    }
-		  } catch(err) {
-				// console.log('There was an error starting up push');
-				// console.log('Error description: ' + err.message);
-				if (self.triggerEvent) {						
-					self.triggerEvent('pushError', { error: err });
-				}			
-			}
-
-	}, true);
+		}, true);
+	}
 
 }; // EO Push
