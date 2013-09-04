@@ -19,6 +19,11 @@ CordovaPush = function(androidServerKey, options) {
                         console.log('Replace token: ' + oldToken + ' -- ' + newToken);
                     };
 
+    self.removeToken = (typeof options.onRemove === 'function')?
+                    options.onRemove:function(token) {
+                        console.log('Remove token: ' + token);
+                    };                    
+
     // (cert.pem and key.pem)
     self.sendIOS = function(from, userToken, title, text, count) {
         // https://npmjs.org/package/apn
@@ -97,7 +102,11 @@ CordovaPush = function(androidServerKey, options) {
                     // This is an old device, token is replaced
                     Fiber(function(self) {
                         // Run in fiber
-                        self.callback(self.oldToken, self.newToken);
+                        try {
+                            self.callback(self.oldToken, self.newToken);
+                        } catch(err) {
+                            
+                        }
 
                     }).run({
                         oldToken: { androidToken: userToken },
@@ -107,6 +116,27 @@ CordovaPush = function(androidServerKey, options) {
                     //self.replaceToken({ androidToken: userToken }, { androidToken: result.results[0].registration_id });
 
                 }
+                // We cant send to that token - might not be registred
+                // ask the user to remove the token from the list
+                if (result.failure !== 0 && userToken) {
+
+                    // This is an old device, token is replaced
+                    Fiber(function(self) {
+                        // Run in fiber
+                        try {
+                            self.callback(self.token);
+                        } catch(err) {
+                            
+                        }
+
+                    }).run({
+                        token: { androidToken: userToken }, 
+                        callback: self.removeToken
+                    });
+                    //self.replaceToken({ androidToken: userToken }, { androidToken: result.results[0].registration_id });
+
+                }
+
             }
         });
         // /** Use the following line if you want to send the message without retries
