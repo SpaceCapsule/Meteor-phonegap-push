@@ -3,7 +3,8 @@ Package.describe({
 });
 
 Package.describe({
-  summary: "\u001b[32mv0.0.3\n"+
+  summary: "Meteor push server for IOS and android\n"+
+  "\u001b[32mv0.0.3\n"+
   "\u001b[33m-----------------------------------------\n"+
   "\u001b[0m Meteor push server for IOS and android   \n"+
   "\u001b[0m                                          \n"+
