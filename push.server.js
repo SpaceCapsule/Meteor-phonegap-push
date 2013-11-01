@@ -24,22 +24,22 @@ CordovaPush = function(androidServerKey, options) {
                         console.log('Remove token: ' + token);
                     };                    
 
+    // https://npmjs.org/package/apn
+
+    // After requesting the certificate from Apple, export your private key as a .p12 file and download the .cer file from the iOS Provisioning Portal.
+    
+    // gateway.push.apple.com, port 2195
+    // gateway.sandbox.push.apple.com, port 2195
+    
+    // Now, in the directory containing cert.cer and key.p12 execute the following commands to generate your .pem files:
+    // $ openssl x509 -in cert.cer -inform DER -outform PEM -out cert.pem
+    // $ openssl pkcs12 -in key.p12 -out key.pem -nodes
+
+    var apn = Npm.require('apn');
+
+    var apnConnection = new apn.Connection( options );
     // (cert.pem and key.pem)
     self.sendIOS = function(from, userToken, title, text, count) {
-        // https://npmjs.org/package/apn
-
-        // After requesting the certificate from Apple, export your private key as a .p12 file and download the .cer file from the iOS Provisioning Portal.
-        
-        // gateway.push.apple.com, port 2195
-        // gateway.sandbox.push.apple.com, port 2195
-        
-        // Now, in the directory containing cert.cer and key.p12 execute the following commands to generate your .pem files:
-        // $ openssl x509 -in cert.cer -inform DER -outform PEM -out cert.pem
-        // $ openssl pkcs12 -in key.p12 -out key.pem -nodes
-
-        var apn = Npm.require('apn');
-
-        var apnConnection = new apn.Connection( options );
 
         var myDevice = new apn.Device(userToken);
 
