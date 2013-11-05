@@ -4,10 +4,10 @@ Meteor push server implementation for push notifications to android and iOS.
 
 ```js
 // Files are placed in the `/private` folder:
-var apnsProdCert = Assets.getBinary('apnProdCert.pem');
-var apnsProdKey = Assets.getBinary('apnProdKey.pem');
-var apnsDevCert = Assets.getBinary('apnDevCert.pem');
-var apnsDevKey = Assets.getBinary('apnDevKey.pem');
+var apnsProdCert = Assets.getText('apnProdCert.pem');
+var apnsProdKey = Assets.getText('apnProdKey.pem');
+var apnsDevCert = Assets.getText('apnDevCert.pem');
+var apnsDevKey = Assets.getText('apnDevKey.pem');
 
 var optionsDevelopment = {
     'passphrase': 'Pass phrase',
