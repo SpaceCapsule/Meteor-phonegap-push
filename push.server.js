@@ -39,7 +39,9 @@ CordovaPush = function(androidServerKey, options) {
 
     var apnConnection = new apn.Connection( options );
     // (cert.pem and key.pem)
-    self.sendIOS = function(from, userToken, title, text, count) {
+    self.sendIOS = function(from, userToken, title, text, count, priority) {
+
+        priority = (priority || priority === 0)? priority || 10;
 
         var myDevice = new apn.Device(userToken);
 
@@ -47,9 +49,10 @@ CordovaPush = function(androidServerKey, options) {
 
         note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
         note.badge = count;
-        //note.sound = "";
+        //note.sound = ""; // XXX: Does this work?
         note.alert = text;
         note.payload = {'messageFrom': from };
+        note.priority = priority;
 
         //console.log('I:Send message to: ' + userToken + ' count=' + count);
 
