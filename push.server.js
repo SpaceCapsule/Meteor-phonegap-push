@@ -41,7 +41,7 @@ CordovaPush = function(androidServerKey, options) {
     // (cert.pem and key.pem)
     self.sendIOS = function(from, userToken, title, text, count, priority) {
 
-        priority = (priority || priority === 0)? priority || 10;
+        priority = (priority || priority === 0)? priority : 10;
 
         var myDevice = new apn.Device(userToken);
 
