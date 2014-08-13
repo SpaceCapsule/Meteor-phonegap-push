@@ -24,6 +24,13 @@ CordovaPush = function(androidServerKey, options) {
                         console.log('Remove token: ' + token);
                     };                    
 
+    if (!options['certData'] || !options['certData'].length)
+        console.log('Push server could not find certData');
+
+    if (!options['keyData'] || !options['keyData'].length)
+        console.log('Push server could not find keyData');
+
+
     // https://npmjs.org/package/apn
 
     // After requesting the certificate from Apple, export your private key as a .p12 file and download the .cer file from the iOS Provisioning Portal.
