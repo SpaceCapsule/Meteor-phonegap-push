@@ -56,7 +56,7 @@ CordovaPush = function(androidServerKey, options) {
 
         note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
         note.badge = count;
-        //note.sound = ""; // XXX: Does this work?
+        note.sound = ""; // XXX: Does this work?
         note.alert = text;
         note.payload = {'messageFrom': from };
         note.priority = priority;
@@ -86,7 +86,7 @@ CordovaPush = function(androidServerKey, options) {
         var sender = new gcm.Sender(androidServerKey);
 
         _.each(userTokens, function(value, key) {
-            //console.log('A:Send message to: ' + value + ' count=' + count);
+            // console.log('A:Send message to: ' + value + ' count=' + count);
         });
         
         /*message.addData('title', title);
@@ -104,9 +104,9 @@ CordovaPush = function(androidServerKey, options) {
         
         sender.send(message, userTokens, 5, function (err, result) {
             if (err) {
-                //console.log('ANDROID ERROR: result of sender: ' + result);
+                // console.log('ANDROID ERROR: result of sender: ' + result);
             } else {
-                //console.log('ANDROID: Result of sender: ' + JSON.stringify(result));
+                // console.log('ANDROID: Result of sender: ' + JSON.stringify(result));
                 if (result.canonical_ids === 1 && userToken) {
 
                     // This is an old device, token is replaced
